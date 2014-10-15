@@ -16,4 +16,6 @@
 + (BOOL)isFirstLaunch;
 + (void)setIsFirstLaunch:(BOOL)isFirstLaunch;
 
++ (NSError *)errorWithDescription:(NSString *)description;
+
 @end

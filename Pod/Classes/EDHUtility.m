@@ -8,9 +8,8 @@
 
 #import "EDHUtility.h"
 
-static NSString * const kIdentifier = @"com.bornneet.EDHUtility";
-
-#define kIsFirstLaunchKey [NSString stringWithFormat:@"%@.%@", kIdentifier, @"kIsFirstLaunchKey"]
+static NSString * const kPodName = @"EDHUtility";
+#define kIsFirstLaunchKey [NSString stringWithFormat:@"%@.%@", kPodName, @"kIsFirstLaunchKey"]
 
 @implementation EDHUtility
 
@@ -23,9 +22,9 @@ static NSString * const kIdentifier = @"com.bornneet.EDHUtility";
 }
 
 + (void)showErrorWithMessage:(NSString *)message controller:(UIViewController *)controller {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", nil) message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[self localizedString:@"Error" withScope:kPodName] message:message preferredStyle:UIAlertControllerStyleAlert];
     
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style: UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    [alertController addAction:[UIAlertAction actionWithTitle:[self localizedString:@"OK" withScope:kPodName] style: UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
     }]];
     
     [controller presentViewController:alertController animated:YES completion:nil];    
@@ -54,5 +53,28 @@ static NSString * const kIdentifier = @"com.bornneet.EDHUtility";
     [[NSUserDefaults standardUserDefaults] setBool:isFirstLaunch forKey:kIsFirstLaunchKey];
 }
 
++ (NSString *)localizedString:(NSString *)string withScope:(NSString *)scope {
+    NSString *key = [NSString stringWithFormat:@"%@.%@", scope, string];
+    
+    NSString *bundlePath = [NSBundle.mainBundle pathForResource:scope ofType:@"bundle"];
+    NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
+    
+    NSString *language = NSLocale.preferredLanguages.count? NSLocale.preferredLanguages.firstObject: @"en";
+    if (![bundle.localizations containsObject:language]) {
+        language = [language componentsSeparatedByString:@"-"].firstObject;
+    }
+    if ([bundle.localizations containsObject:language]) {
+        bundlePath = [bundle pathForResource:language ofType:@"lproj"];
+    }
+    
+    bundle = [NSBundle bundleWithPath:bundlePath] ?: NSBundle.mainBundle;
+
+    string = [bundle localizedStringForKey:key value:string table:nil];
+    return [NSBundle.mainBundle localizedStringForKey:key value:string table:nil];
+}
+
++ (NSError *)errorWithDescription:(NSString *)description {
+    return [NSError errorWithDomain:kPodName code:0 userInfo:@{ NSLocalizedDescriptionKey : description }];
+}
 
 @end
