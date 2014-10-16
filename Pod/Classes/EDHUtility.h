@@ -16,6 +16,7 @@
 + (BOOL)isFirstLaunch;
 + (void)setIsFirstLaunch:(BOOL)isFirstLaunch;
 
++ (NSString *)localizedString:(NSString *)string withScope:(NSString *)scope;
 + (NSError *)errorWithDescription:(NSString *)description;
 
 @end

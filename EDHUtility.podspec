@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "EDHUtility"
-  s.version          = "0.1.1"
+  s.version          = "0.1.2"
   s.summary          = "Utility functions for EDH* pods."
   s.description      = <<-DESC
                        Helper methods, developed for Edhita.
